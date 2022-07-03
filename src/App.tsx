@@ -2,6 +2,7 @@ import ReactTooltip from 'react-tooltip';
 import './App.css';
 import Text from './example.json'
 
+const Diff = require("diff");
 
 interface TranscriptionWord {
   confidence: string,
@@ -16,6 +17,28 @@ interface TranscriptionItem {
   language_code?: string|undefined
 }
 
+const Reference = "The United Kingdom"+
+"England, Scotland, Wales and Northern Ireland are parts of the United"+
+"Kingdom (UK). London is the capital city. English is the official language."+
+"Great Britain is the island with England, Wales and Scotland."+
+"Edinburgh is the capital city of Scotland. A famous landmark in Edinburgh"+
+"is Edinburgh Castle."+
+"Stirling is a city in Scotland. A famous landmark in Stirling is the William"+
+"Wallace Monument."+
+"London is the capital city of England. A famous landmark in London is the"+
+"Palace of Westminster."+
+"Bath is a city in England. A famous landmark in Bath is the ancient Roman"+
+"Spa."+
+"Cardiff is the capital city of Wales. A famous landmark in Cardiff is the"+
+"Millennium Stadium."+
+"Bangor is a city in Wales. A famous landmark in Bangor is the Menai Straits"+
+"Bridge."+
+"Belfast is the capital city of Northern Ireland. A famous landmark in Belfast"+
+"is the Albert Clock."+
+"Derry is a city in Northern Ireland. A famous landmark in Derry is the old"+
+"City Wall."
+
+const diff = Diff.diffChars(Reference, Text.results.transcripts[0].transcript);
 
 function App() {
   const Words:TranscriptionItem []= (Text.results.items)
@@ -28,6 +51,11 @@ function App() {
       </header>
       <ReactTooltip />
       <section>
+      {diff.map((part:any) => {
+        const color = part.added ? "green" : part.removed ? "red" : "grey";
+        return <span style={{ color }}>{part.value}</span>;
+      })}
+      <div></div>
       {render}
       </section>     
     </div>
